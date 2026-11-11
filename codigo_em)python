@@ -1,0 +1,51 @@
+pip install cryptography
+
+from cryptography.fernet import Fernet
+
+
+def main():
+    print("=== SISTEMA DE CRIPTOGRAFIA SIMÉTRICA ===")
+    modo = input(
+        "Escolha o modo:\n[1] Encriptar palavra\n[2] Desencriptar palavra\nOpção: "
+    ).strip()
+
+    if modo == "1":
+        # Gera uma nova chave simétrica válida
+        chave = Fernet.generate_key()
+        cipher = Fernet(chave)
+
+        palavra = input("\nDigite a palavra a ser encriptada: ")
+
+        # Encripta os bytes da palavra
+        palavra_encriptada = cipher.encrypt(palavra.encode())
+
+        print("\n--- RESULTADO ---")
+        print(f"Chave (guarde para decodificar): {chave.decode()}")
+        print(f"Texto Encriptado: {palavra_encriptada.decode()}")
+
+    elif modo == "2":
+        chave_input = input("\nDigite a chave: ").strip()
+        texto_encriptado_input = input(
+            "Digite o texto encriptado: "
+        ).strip()
+
+        try:
+            cipher = Fernet(chave_input.encode())
+            # Desencripta o texto
+            palavra_desencriptada = cipher.decrypt(
+                texto_encriptado_input.encode()
+            ).decode()
+
+            print("\n--- RESULTADO ---")
+            print(f"Palavra Desencriptada: {palavra_desencriptada}")
+        except Exception:
+            print(
+                "\n[Erro] Não foi possível decodificar. Verifique se a chave e o texto encriptado estão corretos."
+            )
+
+    else:
+        print("\nOpção inválida. Execute o programa novamente e digite 1 ou 2.")
+
+
+if __name__ == "__main__":
+    main()
